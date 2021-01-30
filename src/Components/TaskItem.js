@@ -9,12 +9,14 @@ class TaskItem extends Component {
   }
 
   onDelete=()=>{
-    console.log(this.props.task.id)
-    this.props.onDelete(this.props.task.id);
+    this.props.onDeleteTask(this.props.task.id);
+    this.props.onCloseForm();
   }
 
   onUpdate = () => {
-    this.props.onUpdate(this.props.task.id);
+    // this.props.onUpdate(this.props.task.id);
+    this.props.onOpenForm();
+    this.props.onEditTask(this.props.task);
   }
   render() {
     var { task, index } = this.props;
@@ -56,6 +58,18 @@ const mapDispatchToProps = (dispatch, props) => {
     onUpdateStatus: (id) => {
       dispatch(actions.updateStatus(id));
     },
+    onDeleteTask: (id) => {
+      dispatch(actions.deletetask(id));
+    },
+    onCloseForm : () => {
+      dispatch(actions.closeForm());
+    },
+    onOpenForm : () => {
+      dispatch(actions.openForm());
+    },
+    onEditTask : (task) => {
+      dispatch(actions.editTask(task));
+    }
   }
 }
 export default connect(null, mapDispatchToProps)(TaskItem);

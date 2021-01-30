@@ -71,6 +71,7 @@ onClear = () => {
 }
   render () {
       var { id } = this.state;
+      if(!this.props.isDisplayForm) return '';
       return(
     <div className="panel panel-warning">
               <div className="panel-heading">
@@ -126,7 +127,7 @@ onClear = () => {
 
 const mapStateToProps = state => {
     return {
-
+        isDisplayForm : state.isDisplayForm
     }
 };
 const mapDispatchToProps = (dispatch, props) => {
@@ -136,7 +137,7 @@ const mapDispatchToProps = (dispatch, props) => {
         },
         onCloseForm : () => {
             dispatch(actions.closeForm());
-          }
+          },
     }
 }
 
