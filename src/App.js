@@ -51,30 +51,6 @@ class App extends Component {
     });
   }
 
-  // onUpdateStatus=(id)=>{
-  //   var { tasks} = this.state;
-  //   var index = this.findIndex(id);
-  //   console.log(index);
-  //   if(index!==-1){
-  //     tasks[index].status= !tasks[index].status;
-  //     this.setState({
-  //       tasks: tasks
-  //     });
-  //     localStorage.setItem('tasks',JSON.stringify(tasks));
-  //   }
-  // }
-
-  // findIndex = (id) =>{
-  //   var { tasks} = this.state;
-  //   var result = -1
-  //   tasks.forEach((task,index)=>{
-  //     if(task.id===id){
-  //       result = index  
-  //     }
-  //   });
-  //   return result;
-  // }
-
   onUpdate=(id)=>{
     console.log(id);
     var { tasks} = this.state;
@@ -110,6 +86,11 @@ class App extends Component {
       sortValue: sortValue   
     });
     console.log(this.state);
+  }
+
+  onClearTask = () => {
+    this.props.onClearTask();
+    this.props.onOpenForm();
   }
 
   render() {
@@ -148,10 +129,6 @@ class App extends Component {
         else return 0
       });
     }
-    // var elmTaskForm = isDisplayForm === true ? 
-    //     <TaskForm 
-    //       task={taskEditing}
-    //     /> : '';
   return (
     <div className="container">
         <div className="text-center">
@@ -167,7 +144,7 @@ class App extends Component {
             <button 
               type="button" 
               className="btn btn-primary mb-4 mr-4"
-              onClick={this.props.onToggleForm}
+              onClick={this.onClearTask}
             >
               <span className="fa fa-plus mr-5" />Thêm Công Việc
             </button>
@@ -205,8 +182,11 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = (dispatch, props) => {
   return {
-    onToggleForm : () => {
-      dispatch(actions.toggleForm());
+    onOpenForm : () => {
+      dispatch(actions.openForm());
+    },
+    onClearTask : () => {
+      dispatch(actions.clearTask());
     },
   }
 }

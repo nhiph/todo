@@ -23,20 +23,29 @@ var findIndex = (tasks, id) =>{
 }
 
 var myReducer = (state = initialState, action ) => {
+    var index = -1;
+    var id = '';
     switch (action.type) {
         // case types.LIST_ALL:
         //     return state;
-        case types.ADD_TASK:
-            var newTask =  {
-                id: generateID(),
+        case types.SAVE_TASK:
+            var task = {
+                id: action.task.id,
                 name: action.task.name,
-                status: action.task.status === true //status: action.task.status === 'true' ? true : false
+                status: action.task.status === true
             };
-            state.push(newTask);
+            if(!task.id){
+                task.id=generateID();
+                state.push(task);
+            }
+            else {
+                index = findIndex(state, task.id);
+                state[index] =task;
+            }
             localStorage.setItem('tasks',JSON.stringify(state));
             return [...state]; //Truong hop them task, khong can tao 1 state copy [...] => se lamf phung phi bo nho, tai nguyen (bo nho, cpu, thread, network) can duoc tiet kiem. 
         case types.UPDATE_STATUS_TASK:
-            var index = findIndex(state, action.id);    
+            index = findIndex(state, action.id);    
             state[index] = {
                 ...state[index],
                 status: !state[index].status
@@ -45,8 +54,8 @@ var myReducer = (state = initialState, action ) => {
             
             return [...state];
         case types.DELETE_TASK:
-            var id = action.id;
-            var index = findIndex(state,id);
+            id = action.id;
+            index = findIndex(state,id);
             state.splice(index,1);
             localStorage.setItem('tasks',JSON.stringify(state));
             return [...state];
