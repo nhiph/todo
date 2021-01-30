@@ -4,10 +4,6 @@ import * as actions from '../actions';
 
 class TaskItem extends Component {
 
-  constructor(props) {
-    super(props);
-  } 
-
   onUpdateStatus = () => {
     this.props.onUpdateStatus(this.props.task.id);
   }
