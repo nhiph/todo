@@ -36,11 +36,12 @@ var myReducer = (state = initialState, action ) => {
             localStorage.setItem('tasks',JSON.stringify(state));
             return [...state]; //Truong hop them task, khong can tao 1 state copy [...] => se lamf phung phi bo nho, tai nguyen (bo nho, cpu, thread, network) can duoc tiet kiem. 
         case types.UPDATE_STATUS_TASK:
-            var { tasks} = state;
             var index = findIndex(state, action.id);    
-            state[index].status =!state[index].status;
-            console.log(state);
-            // localStorage.setItem('tasks',JSON.stringify(tasks));
+            state[index] = {
+                ...state[index],
+                status: !state[index].status
+            };
+            localStorage.setItem('tasks',JSON.stringify(state));
             
             return [...state];
 
