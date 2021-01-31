@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import TaskItem from './TaskItem';
 import { connect } from 'react-redux';
+import * as actions from '../actions';
 
 class TaskList extends Component {
   constructor (props) {
@@ -15,19 +16,52 @@ class TaskList extends Component {
     var target = event.target;
     var name = target.name;
     var value = target.value;
-    this.props.onFilter(
-      name === 'filterName' ? value : this.state.filterName,
-      name === 'filterStatus' ? value : this.state.filterStatus,
-      
-    )
+    var filter = {
+      name: name === 'filterName' ? value : this.state.filterName,
+      status: name === 'filterStatus' ? value : this.state.filterStatus
+    };
+    this.props.onFilterTable(filter);
     this.setState({
       [name]: value
     });
   }
 
   render() {
-    var  tasks = this.props.tasks ; //tasks=this.props.tasks;//
+    var  {tasks, filterTable, keyword, sort} = this.props ; //tasks=this.props.tasks;//
+    console.log(sort);
     var { filterName, filterStatus } = this.state;
+      if(filterTable.name){
+        tasks = tasks.filter((task)=>{
+          return task.name.toLowerCase().indexOf(filterTable.name) !== -1;
+        });
+      }
+      tasks = tasks.filter((task)=>{
+        if(filterTable.status === -1) {
+          return task;
+        } else {
+          return task.status === (filterTable.status === 1 ? true : false);
+        }
+        
+      });
+
+        tasks = tasks.filter((task)=>{
+          return task.name.toLowerCase().indexOf(keyword.toLowerCase()) !== -1;
+        });
+
+        if(sort.by === 'name') {
+          tasks.sort((a,b)=>{
+            if(a.name > b.name) return sort.value;
+            else if (a.name < b.name) return -sort.value;
+            else return 0
+          });
+        } else {
+          tasks.sort((a,b)=>{
+            if(a.status > b.status) return -sort.value;
+            else if (a.status < b.status) return sort.value;
+            else return 0
+          });
+        }
+
     var elmTasks = tasks.map((task, index) => {
       return <TaskItem 
                 key={index} 
@@ -36,6 +70,7 @@ class TaskList extends Component {
                 onUpdate={this.props.onUpdate}
               />
     })
+    
   return (
     <table className="table table-bordered table-hover">
                   <thead>
@@ -79,8 +114,18 @@ class TaskList extends Component {
 
 const mapStateToProps = (state) => { //state la myReducer
   return {
-    tasks : state.tasks
+    tasks : state.tasks,
+    filterTable: state.filterTable,
+    keyword: state.search,
+    sort: state.sort
   }
 }
-export default connect(mapStateToProps, null)(TaskList);
+const mapDispatchToProps = (dispatch, props) => {
+  return {
+    onFilterTable : (filter) => {
+      dispatch(actions.filterTask(filter));
+    },
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(TaskList);
 

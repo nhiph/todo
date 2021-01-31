@@ -49,3 +49,21 @@ export const clearTask = () => {
         type: types.CLEAR_TASK
     }
 };
+export const filterTask = (filter) => {
+    return {
+        type: types.FILTER_TABLE,
+        filter
+    }
+};
+export const searchTask = (keyword) => {
+    return {
+        type: types.SEARCH,
+        keyword
+    }
+};
+export const sortTask = (sort) => {
+    return {
+        type: types.SORT,
+        sort
+    }
+};
